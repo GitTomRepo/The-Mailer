@@ -6,7 +6,7 @@
 # -------------------------------------------------------- #
 # FIRST_PAGE
 # UTF-8
-# Version : V1.0 | B0.5 DONE
+# Version : V1.0 | B0.6 DONE
 
 import smtplib
 from email.message import EmailMessage
@@ -14,17 +14,17 @@ import requests
 import time, random
 import datetime
 from bs4 import BeautifulSoup
-import os
 
 #******************************* PRE-WRITED MESSAGES *******************************
 scripted_msg = ["Nouveau contenu sur ", "Il y a du nouveau sur ", "Du contenu a été mis sur "]
-scripted_from = ["Padlet ESC SVT : https://padlet.com/gsseprofsvt/Ens_scien", "Padlet d'Anglais : https://padlet.com/touzeletv/w2g6cw4facefkhsw", "Google Site Physique Chimie : https://sites.google.com/view/sciences-physiques-facile/terminale-sp%C3%A9"]
+scripted_from = ["Drive Spé-Maths : https://drive.google.com/drive/folders/1Fel3dWoqXMVtOas6txa13FumDmtjps64", "Padlet ESC SVT : https://padlet.com/gsseprofsvt/Ens_scien", "Padlet d'Anglais : https://padlet.com/touzeletv/w2g6cw4facefkhsw", "Google Site Physique Chimie : https://sites.google.com/view/sciences-physiques-facile/terminale-sp%C3%A9"]
+
 state = True
 
 time_start = datetime.datetime.today()
 
 print("************************************ MAIN *****************************************")
-print("Version : V1.0 | B0.5 DONE")
+print("Version : V1.0 | B0.6 DONE")
 print("Heure de Début :", time_start)
 print("\n             -----------------------------------------------------       \n")
 
@@ -32,11 +32,11 @@ def email_post (content, scripted_msg, dest) :
     msg = EmailMessage()
     msg.set_content(random.choice(scripted_msg) + content)
     msg["Subject"] = "NOTIFICATION | NEW CONTENT"
-    msg["From"] = "...mail adress for the bot..."
+    msg["From"] = "...BOT ADRESS..."
     msg["To"] = dest
     with smtplib.SMTP("smtp.gmail.com", port=587) as smtp:
         smtp.starttls()
-        smtp.login("...botmail adress...", "...Password of the botmail adress...")
+        smtp.login("... BOT adress", "... Password Adress...")
         smtp.send_message(msg)
     print("EMAIL OK ...")
 
@@ -54,10 +54,6 @@ def GOOGLE_site_spe_terme () :
 
     # print(desc_final)
     return desc_final
-
-#def Drive_sm ():
-#    list_logs_dsm = DriveExploit.Drive_Maths_Spe_Term()
-#    return list_logs_dsm
 
 def Padlet_ESC_SVT () :
     requete = requests.get("https://padlet.com/padlets/dwg0n1skdy/exports/feed.xml")
@@ -81,12 +77,11 @@ def Padlet_Anglais () :
     #print(page[13])
     return str(page[13].encode('utf-8'))
 
-set_time = int(0)
-
 try :
     while state :
         print(datetime.datetime.today())
-        
+        set_time = int(0)
+
         list_response_term = [Padlet_ESC_SVT(), Padlet_Anglais()]
         list_path_term = ["LOGS_SVT.txt", "LOGS_ANGLAIS.txt"]
 
@@ -104,12 +99,12 @@ try :
                 change = open(list_path_term[n], "w")
                 change = change.writelines(list_response_term[n])
                 print("CHANGEMENT", list_path_term[n])
+                email_post(scripted_from[n], scripted_msg, "USERAdmin")
                 email_post(scripted_from[n], scripted_msg, "USER1")
                 email_post(scripted_from[n], scripted_msg, "USER2")
                 email_post(scripted_from[n], scripted_msg, "USER3")
                 email_post(scripted_from[n], scripted_msg, "USER4")
                 email_post(scripted_from[n], scripted_msg, "USER5")
-                email_post(scripted_from[n], scripted_msg, "USER6")
             else :
                 path_open.close()
                 print("AUCUN CHANGEMENT")
@@ -121,8 +116,8 @@ try :
         scale = len(data_rls)
         data_file.close()
 
-        #print(data)
-        #print(data_rls)
+        # print(data)
+        # print(data_rls)
 
         q = 0
         m = 0
@@ -144,15 +139,13 @@ try :
             while q < len(data):
                 data_rls_terme = data[q]
                 final_data_rls = data_rls_terme[:-2]
-                #print(final_data_rls)
+                # print(final_data_rls)
                 data_to_match.append(final_data_rls + "'")
                 q += 1
-            print("OK")
 
         else :
             while q < len(data):
                 data_rls_terme = data_rls[q]
-                #print(data_rls_terme)
                 final_data_rls = data_rls_terme[:-2]
                 # print(final_data_rls)
                 data_to_match.append(final_data_rls + "'")
@@ -160,10 +153,22 @@ try :
 
             while m < len(data_rls):
                 # print(data[m])
-                # print(data_to_match[m])&
+                # print(data_to_match[m])
                 if data[m] != data_to_match[m]:
                     count_change += 1
                 m += 1
+
+
+        if count_change >= int(1) :
+            print("CHANGEMENT LOGS_GS.txt")
+            email_post(scripted_from[-1], scripted_msg, "USERAdmin")
+            email_post(scripted_from[-1], scripted_msg, "USER1")
+            email_post(scripted_from[-1], scripted_msg, "USER2")
+            email_post(scripted_from[-1], scripted_msg, "USER3")
+            email_post(scripted_from[-1], scripted_msg, "USER4")
+            email_post(scripted_from[-1], scripted_msg, "USER5")
+        else :
+            print("AUCUN CHANGEMENT")
 
         while r < len(data) :
             data_to_match[r] = str(data[r] + "\n")
@@ -172,29 +177,16 @@ try :
             data_file.close()
             r += 1
 
-        if count_change >= int(1) :
-            print("CHANGEMENT LOGS_GS.txt")
-            email_post(scripted_from[-1], scripted_msg, "USER1")
-            email_post(scripted_from[-1], scripted_msg, "USER2")
-            email_post(scripted_from[-1], scripted_msg, "USER3")
-            email_post(scripted_from[-1], scripted_msg, "USER4")
-            email_post(scripted_from[-1], scripted_msg, "USER5")
-            email_post(scripted_from[-1], scripted_msg, "USER6")
-        else :
-            print("AUCUN CHANGEMENT")
-
         print("\n             -----------------------------------------------------       \n")
 
         time.sleep(60)
 
-        if set_time == 60 :
-            email_post("SYSTEM ONLINE", [" ", " ", " "], "ADMIN")
+        if set_time == 58 :
+            email_post("SYSTEM ONLINE", [" ", " ", " "], "... ADMIN EMAIL...")
             set_time = int(0)
 
         set_time += int(1)
 
-except :
-    print("ERROR ...")
-    email_post("SYSTE OFFLINE", [" ", " ", " "], "ADMIN")
-    os.system("sudo /mnt/init_start.sh")
-
+except EnvironmentError as err:
+    print("ERROR ..." + err)
+    email_post("SYSTEM OFFLINE, [err], "...ADMIN EMAIL...")
