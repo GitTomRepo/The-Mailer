@@ -181,12 +181,6 @@ try :
 
         time.sleep(60)
 
-        if set_time == 58 :
-            email_post("SYSTEM ONLINE", [" ", " ", " "], "... ADMIN EMAIL...")
-            set_time = int(0)
-
-        set_time += int(1)
-
 except EnvironmentError as err:
     print("ERROR ..." + err)
     email_post("SYSTEM OFFLINE, [err], "...ADMIN EMAIL...")
