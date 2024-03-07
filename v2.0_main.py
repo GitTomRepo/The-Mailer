@@ -127,7 +127,7 @@ def email_post (content, scripted_msg, dest) :
         msg["To"] = dest
         with smtplib.SMTP("smtp.gmail.com", port=587) as smtp:
             smtp.starttls()
-            smtp.login("bot.mailnoreturn@gmail.com", "Qzt=25S@#/")
+            smtp.login("bot.mailnoreturn@gmail.com", "*******")
             smtp.send_message(msg)
         print("[.] EMAIL OK ...")
 
